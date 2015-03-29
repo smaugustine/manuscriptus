@@ -1,11 +1,14 @@
 # Manuscriptus Pro #
 Manuscriptus Pro is an open-source web-based application (written in PHP and using MySQL) designed to facilitate and organize the preparation of manuscript corpuses and critical editions. One can create corpuses, add manuscripts to a corpus, and add lines to a manuscript. Manuscripts can be searched, compared, annotated, and exported for further use. Although it is web-based, it is also designed to be used locally and thus can be used both online for collaborative work or offline for individual work.
+
 # Requirements (Host) #
 * PHP 5.0 (recommended PHP 5.4 or greater)
 * MySQL 5.0 (recommended MySQL 5.5 or greater)
 * Apache Server with mod_rewrite
+
 # Requirements (Browser) #
 * JavaScript enabled
+
 # Roadmap for Releases #
 
 ##v0.3##
@@ -45,6 +48,7 @@ Manuscriptus Pro is an open-source web-based application (written in PHP and usi
 * Awesome new interface?
 * Cleaner, more intuitive architecture?
 * Cool new features?
+
 ## Plugins ##
 * Secure User Account System (available by v1.5)
 * Integrated manuscript images?
