@@ -21,20 +21,20 @@ Manuscriptus Pro is an open-source web-based application (written in PHP and usi
 * Delete corpuses, manuscripts, and lines
 
 ## v0.5 ##
+* Create and restore from backups
+
+## v0.6##
 * Pagination for lines
 * Search in manuscripts and corpuses 
 
-## v0.6 ##
+## v0.7 ##
 * Compare and analyze manuscripts in a corpus
 
-## v0.7 ##
+## v0.8 ##
 * Import corpuses, manuscripts, and lines
 
-##v0.8##
+##v0.9##
 * Export corpuses, manuscripts, and lines
-
-## v0.9 ##
-* Create and restore from backups
 
 ## v1.0 ##
 * Full documentation available
