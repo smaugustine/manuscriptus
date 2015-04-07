@@ -1,0 +1,177 @@
+html {
+	position: relative;
+	min-height: 100%;
+}
+body {
+	padding-top: 50px; /*Padding for navbar*/
+}
+.main{
+	margin-bottom: 50px; /*Margin for footer*/
+}
+.footer {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	border-top: 1px solid rgb(155, 155, 155);
+	background-color: #eee;
+	padding-top: 8px;
+	height: 40px;
+}
+
+.page-header{
+	border-bottom-color: rgb(221, 221, 221);
+}
+
+.dropdown-menu li.disabled, .dropdown-menu li.disabled a{
+	cursor: default !important; /*Normal cursor for disabled dropdown items*/
+}
+
+.input-group[class*=col-]{
+	padding-left: 15px;
+	padding-right: 15px;
+}
+
+form.form, form.form-horizontal{
+	text-align: center;
+}
+
+.list-group-item-text{
+	max-height: 18px;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+.navbar-fixed-top{
+	-webkit-font-smoothing: subpixel-antialiased;
+}
+
+p.lead.well{
+	font-size: 17px;
+}
+
+h1.page-header a, h1.page-header a:visited, h1.page-header a:hover{ color: rgb(51, 51, 51);
+	text-decoration: none;
+}
+
+h2 a, h2 a:visited, h2 a:hover{ color: rgb(51, 51, 51);
+	text-decoration: none;
+}
+
+[data-toggle="popover"]{
+	outline: none;
+	cursor: pointer;
+}
+
+.popover-content{
+	text-align: justify;
+}
+
+.popover-title{
+	text-align: center;
+}
+
+.alert, .panel{
+	text-align: left;
+}
+
+.alert b{
+	white-space: nowrap;
+}
+
+span.footnote-divider{
+	display: block;
+	width: 100px;
+	height: 1px;
+	border-top: 1px solid rgb(119, 119, 119);
+	margin-top: 15px;
+}
+
+table#manuscript-lines{
+	border-bottom: 1px solid #ddd;
+}
+
+table#manuscript-lines td{
+	width: 100%;
+}
+
+table#manuscript-lines th{
+	font-family: monospace;
+	font-weight: normal;
+	color: rgb(119, 119, 119);
+}
+
+a.ms-line, a.ms-line:hover, a.ms-line:visited{
+	color: rgb(51, 51, 51);
+	text-decoration: none;
+}
+
+table#manuscript-lines div.panel{
+	margin-bottom: 0px;
+	margin-top: 10px;
+}
+
+table#manuscript-lines div.panel div.panel-body{
+	padding: 10px;
+}
+
+.table-striped tbody tr:nth-of-type(odd){
+	background-color: #eee;
+}
+
+.table-hover tbody tr:hover{
+	background-color: #eaeaea;
+}
+
+th, #manuscript-table table tbody tr td{
+	white-space: nowrap;
+}
+
+#manuscript-table table tbody tr td:last-child{
+	width: 100%;
+}
+
+#manuscript-table tbody tr{
+	cursor: pointer;
+}
+
+#manuscript-table{
+	border-top: 1px solid rgb(221, 221, 221);
+	width: intrinsic;
+}
+
+#manuscript-table table{
+	border-top: none;
+}
+a.ms-line{
+	width: 100%;
+	display: inline-block;
+	margin-right: -15px;
+	padding-right: 15px;
+}
+
+th a.glyphicon{
+	margin-top: -2px;
+}
+
+.sort, .sort:hover{
+	cursor: pointer;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	color: rgb(51, 51, 51);
+	text-decoration: none;
+}
+
+.footnote{
+	color: rgb(119, 119, 119);
+}
+
+ul.breadcrumb{
+	padding-left: 0px;
+	padding-right: 0px;
+	margin-top: 10px;
+	margin-bottom: -10px;
+	background-color: transparent;
+}
