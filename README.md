@@ -19,6 +19,10 @@ Manuscriptus Pro is an open-source web-based application (written in PHP and usi
 * Efficient editor, Markdown syntax, and footnotes for lines
 * Edit corpuses, manuscripts, and lines
 * Delete corpuses, manuscripts, and lines
+* **v0.4.1**
+	* View lines from all manuscripts in a corpus together
+* **v0.4.2**
+	* Basic docs and faqs
 
 ## v0.5 ##
 * Create and restore from backups
