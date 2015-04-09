@@ -93,13 +93,113 @@ if($the_corpus && $the_ms):
 ?>
 
 <?php
+###View all MSS of a single corpus###
+###url: manuscriptus-pro/view/<corpus>/all/
+elseif($the_corpus && $view_all_manuscripts):
+	$manuscripts = $db->get_results("SELECT * FROM manuscripts WHERE corpus = '".$the_corpus->id."' ORDER BY siglum ASC");
+	$ms_list = '';
+	foreach($manuscripts as $manuscript){
+		$ms_list .= 'SELECT "'. $manuscript->siglum .'" as siglum, "'. $manuscript->id .'" as manuscript, number, text, comments FROM ' . dash2us($manuscript->id) . ' UNION ';
+	}
+	$ms_list = substr($ms_list, 0, -7);
+	$ms_list .= " ORDER BY number ASC";
+	$lines = $db->get_results("$ms_list");
+	if($lines):
+	?>
+		<table id="manuscript-lines" class="table table-striped table-hover table-condensed">
+			<?php
+			$footnote_recount = 0;
+			$curr_line = false;
+			foreach($lines as $line):
+				if($curr_line == false) $curr_line = $line->number;
+				if($curr_line != $line->number){
+					echo '<tr><td colspan="3" style="background-color: white;"></td></td></tr>';
+					echo '<tr><td colspan="3" style="display: none;"></td></td></tr>'; //To ensure correct striping
+					$curr_line = $line->number;
+				}
+			?>
+				<tr>
+					<th>
+						<a class="btn btn-primary btn-xs glyphicon glyphicon-pencil" href="edit/<?=$the_corpus->id.'/'.$line->manuscript.'/'.$line->number?>/"></a>
+						<a class="btn btn-danger btn-xs glyphicon glyphicon-trash" style="margin-left: -5px;" data-toggle="modal" data-target="#deleteLine" data-linenumber="<?=$line->number?>" data-linems="<?=$line->manuscript?>"></a>
+					</th>
+					<th style="text-align: right;"><small><?=$line->siglum.'.'.$line->number?></small></th>
+					<td>
+					<?php
+						preg_match_all('/( *)(\[\* )(.+?)(\])/', $line->text, $footnotes);
+						//If line has footnotes and/or comments
+						if(!empty($footnotes[0]) || !empty($line->comments)):
+					?>
+							<a class="ms-line" data-toggle="collapse" href="#line-<?=$line->number?>-data"><?=markdown($line->text)?></a>
+							<span class="glyphicon glyphicon-option-vertical"  style="float: right;"></span>
+							<div id="line-<?=$line->number?>-data" class="collapse">
+							<?php
+								if(!empty($footnotes[0])){
+									echo '<span class="footnote-divider"></span>';
+									foreach($footnotes[0] as $footnote){
+										$footnote = preg_replace('/(\[\* )(.+?)(\])/', '$2', $footnote);
+										echo '<small class="footnote"><sup>'.++$footnote_recount.'</sup>'.markdown($footnote).'</small><br>';
+									}
+								}
+								if(!empty($line->comments)) echo '<div class="panel panel-info"><div class="panel-body">'.markdown($line->comments).'</div></div>';
+							?>
+							</div>
+					<?php
+						//If line does not have footnotes or comments
+						else: echo markdown($line->text);
+						endif;
+					?>
+					</td>
+				</tr>
+			<?php endforeach; ?>
+		</table>
+		<div class="modal fade" id="deleteLine" tabindex="-1" role="dialog">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<h4 class="modal-title">Delete Line?</h4>
+					</div>
+					<div class="modal-body">
+						Are you sure you want to delete <b id="infolinenumber">Line </b> of <b id="infolinems"></b>? This will permanently delete the line. The data cannot be recovered unless you have a backup or an export of it.
+					</div>
+					<div class="modal-footer">
+						<form action="<?=THE_BASE_URL?>" method="post">
+							<button type="button" class="btn btn-warning" data-dismiss="modal">Cancel</button>
+							<input type="hidden" id="deletelinenumber" name="deleteLineNumber" value="">
+							<input type="hidden" id="deletelinems" name="deleteLineMS" value="">
+							<input type="hidden" name="deleteLineCorpus" value="<?=$the_corpus->id?>">
+							<button type="submit" class="btn btn-danger">Delete Line</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript">
+		$('#deleteLine').on('show.bs.modal', function (event) {
+			var button = $(event.relatedTarget);
+			var linenumber = button.data('linenumber');
+			var linems = button.data('linems');
+			var modal = $(this);
+			modal.find('#infolinenumber').text('Line ' + linenumber);
+			modal.find('#infolinems').text(linems);
+			modal.find('#deletelinenumber').val(linenumber);
+			modal.find('#deletelinems').val(linems);
+		});
+		</script>
+<?php
+	else: echo '<div class="alert alert-warning" role="alert">No lines were found.</div>';
+	endif;
+?>
+
+<?php
 ###View single corpus###
 ###url: manuscriptus-pro/view/<corpus>/###
 elseif($the_corpus):
 	if(!empty($the_corpus->description)) echo '<p class="lead">'.markdown($the_corpus->description).'</p>';
 	$manuscripts = $db->get_results("SELECT * FROM manuscripts WHERE corpus = '".$the_corpus->id."' ORDER BY siglum ASC");
 	if($manuscripts): ?>
-		<!--<a href="view/<?=$the_corpus->id?>/all/" class="btn btn-primary" style="margin-bottom: 15px;">View All Manuscripts</a>-->
+		<a href="view/<?=$the_corpus->id?>/all/" class="btn btn-primary" style="margin-bottom: 15px;">View All Manuscripts</a>
 		<script src="js/tinysort.min.js"></script>
 		<div id="manuscript-table"><table class="table table-striped table-hover table-bordered">
 			<thead><tr>

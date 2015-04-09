@@ -22,7 +22,7 @@ Manuscriptus Pro is an open-source web-based application (written in PHP and usi
 * **v0.4.1**
 	* View lines from all manuscripts in a corpus together
 * **v0.4.2**
-	* Basic docs and faqs
+	* Basic docs and instructions
 
 ## v0.5 ##
 * Create and restore from backups

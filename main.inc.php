@@ -18,7 +18,11 @@ if(argument('namespace') == 'view' && argument(0)){
 }
 elseif(argument('namespace') == 'view') header("Location: ".THE_BASE_URL);
 
-if(argument('namespace') == 'view' && $the_corpus && argument(1) == 'all') die('foobar');
+$view_all_manuscripts = false;
+if(argument('namespace') == 'view' && $the_corpus && argument(1) == 'all'){
+	$view_all_manuscripts = true;
+	breadcrumbs("All Manuscripts", 'view/'.$the_corpus->id.'/all/');
+}
 elseif(argument('namespace') == 'view' && $the_corpus && argument(1)){
 	$the_ms = $db->escape(strip_html(argument(1)));
 	$the_ms = $db->get_row("SELECT * FROM manuscripts WHERE id = '$the_ms'");
