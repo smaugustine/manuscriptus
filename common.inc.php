@@ -67,6 +67,22 @@ $counts = $db->get_row("SELECT COUNT(*) AS corpus_count,(SELECT COUNT(*) FROM ma
 if(!$counts) if(!$link) die('Fatal error: could not connect to required tables. Check database information.');
 
 /*
+ * Setup .htaccess
+ */
+if(!file_exists('.htaccess')){
+	$f = fopen(".htaccess", "a+");
+	fwrite($f, "
+<IfModule mod_rewrite.c>
+	RewriteEngine on
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteRule ^ index.php [L]
+</IfModule>");
+	fclose($f);
+}
+if(!file_exists('.htaccess')) die('The .htaccess file could not be created/edited.');
+
+/*
  * Function Declarations
  */
 //Returns Bootstrap inputs
