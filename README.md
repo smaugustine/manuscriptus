@@ -8,6 +8,14 @@ Manuscriptus Pro is an open-source web-based application (written in PHP and usi
 
 # Requirements (Browser) #
 * JavaScript enabled
+* HTML5 and CSS3 compliant browser (most modern browsers)
+
+# Installation #
+1. Ensure that a sufficient PHP and MySQL environment is available.
+2. Download and unzip the file to the location you would like it to be installed.
+3. Either rename the created directory to `manuscriptus-pro` or change `$manuscriptus_dir` (line 43 of `common.inc.php`) to the directory name you wish to use.
+4. Ensure that the database settings on lines 16-18 of `common.inc.php` are correct. It is not necessary to create any databases or tables, as the program will do that itself. Note that it will try to use any database named `manuscriptus`, so it is advisable to change the name of the existing database first. Because of this, it is not possible to have multiple installations of Manuscriptus Pro on the same host.
+5. Navigate to the Manuscriptus Pro directory in your browser (at this point it will make the rest of the necessary changes).
 
 # Roadmap for Releases #
 

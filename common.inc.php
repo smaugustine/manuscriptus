@@ -35,7 +35,7 @@ function db_connect(){
 	$db = new ezSQL_mysqli($username,$password,'manuscriptus',$host);
 }
 
-define('MP_VERSION', 'v0.4.1');
+define('MP_VERSION', 'v0.4.2');
 header("Content-Type: text/html; charset=UTF-8");
 
 //THE_BASE_URL: used to ensure that Manuscriptus Pro
