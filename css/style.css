@@ -14,12 +14,8 @@ body {
 	width: 100%;
 	border-top: 1px solid rgb(155, 155, 155);
 	background-color: #eee;
-	height: 30px;
+	height: 40px;
 }
-.footer p{
-	line-height: 30px;
-}
-
 .page-header{
 	border-bottom-color: rgb(221, 221, 221);
 }
@@ -79,6 +75,10 @@ h2 a, h2 a:visited, h2 a:hover{ color: rgb(51, 51, 51);
 
 .alert b{
 	white-space: nowrap;
+}
+
+div.help-content .alert b{
+	white-space: normal;
 }
 
 span.footnote-divider{
@@ -183,14 +183,18 @@ ul.nav-stacked>li>a{
 	border-radius: 5px;
 }
 
-div.help-content{
+.help-content{
+	padding-top: 50px;
+}
+
+.help-content, .help-content:target ~ #overview{
 	display: none;
 }
 
-div.help-content:target{
+#overview, .help-content:target{
 	display: block;
 }
 
-div.help-content h2{
+.help-content h2{
 	margin-top: 0;
 }
