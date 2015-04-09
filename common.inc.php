@@ -35,12 +35,13 @@ function db_connect(){
 	$db = new ezSQL_mysqli($username,$password,'manuscriptus',$host);
 }
 
-define('MP_VERSION', 'v0.4');
+define('MP_VERSION', 'v0.4.1');
 header("Content-Type: text/html; charset=UTF-8");
 
 //THE_BASE_URL: used to ensure that Manuscriptus Pro
 //links work in subdirectories
-define('THE_BASE_URL', strstr($_SERVER['REQUEST_URI'], 'manuscriptus-pro', true).'manuscriptus-pro/');
+$manuscriptus_dir = 'manuscriptus-pro';
+define('THE_BASE_URL', strstr($_SERVER['REQUEST_URI'], $manuscriptus_dir, true)."$manuscriptus_dir/");
 
 //Session is mostly used for sending info (e.g. alerts) without using POST or GET.
 //Note that session is closed at the end of toolbar.php,
@@ -195,7 +196,7 @@ function breadcrumbs($title = false, $url = false){
 	}
 	elseif(count($breadcrumbs) < 2) return false;
 	else{
-		$breadcrumbs_return = '<ul class="breadcrumb ">';
+		$breadcrumbs_return = '<ul class="breadcrumb">';
 		$activecrumb = array_search(end($breadcrumbs), $breadcrumbs);
 		foreach($breadcrumbs as $title => $url){
 			if($title == $activecrumb) $breadcrumbs_return .= '<li class="active">'.$title.'</li>';
@@ -257,11 +258,11 @@ require_once('functions/functions.inc.php');
 
 ###Help Menu###
 //The Help menu is always last
-/*nav_menu('Help', array(
-	array('title' => 'Manuscriptus Pro FAQ', 'url' => 'faq/', 'condition' => 1),
+nav_menu('Help', array(
+	//array('title' => 'Manuscriptus Pro FAQ', 'url' => 'faq/', 'condition' => 1),
 	array('title' => 'Manuscriptus Pro Help', 'url' => 'help/', 'condition' => 1),
 	array('title' => 'About Manuscriptus Pro', 'url' => 'about/', 'condition' => 1)
-));*/
+));
 
 ###If POST Header Still Full###
 //Throw error, because form was
