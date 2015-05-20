@@ -66,3 +66,4 @@ Manuscriptus Pro is an open-source web-based application (written in PHP and usi
 * Integrated manuscript images?
 * MUFI palette?
 * Polytonic Greek keyboard?
+* Font integration?
