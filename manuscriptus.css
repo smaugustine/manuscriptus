@@ -21,6 +21,13 @@ a{
 	color: inherit;
 }
 
+a.anchor{
+	display: block;
+	position: relative;
+	top: -25px;
+	visibility: hidden;
+}
+
 nav.navbar{
 	margin-bottom: 0px;
 }
