@@ -19,6 +19,11 @@ html, body{
 a{
 	text-decoration: underline;
 	color: inherit;
+    -webkit-transition: all 0.2s;
+    -moz-transition: all 0.2s;
+    -ms-transition: all 0.2s;
+    -o-transition: all 0.2s;
+    transition: all 0.2s;
 }
 
 a.anchor{
@@ -26,6 +31,10 @@ a.anchor{
 	position: relative;
 	top: -25px;
 	visibility: hidden;
+}
+
+p{
+	font-size: 16px;
 }
 
 nav.navbar{
