@@ -1,5 +1,5 @@
-# Manuscriptus Pro #
-Manuscriptus Pro is an open-source web-based application (written in PHP and using MySQL) designed to facilitate and organize the preparation of manuscript corpuses and critical editions. One can create corpuses, add manuscripts to a corpus, and add lines to a manuscript. Manuscripts can be searched, compared, annotated, and exported for further use. Although it is web-based, it is also designed to be used locally and thus can be used both online for collaborative work or offline for individual work.
+# Manuscriptus: Codex #
+Manuscriptus: Codex is an open-source web-based application (written in PHP and using MySQL) designed to facilitate and organize the preparation of manuscript corpuses and critical editions. One can create corpuses, add manuscripts to a corpus, and add lines to a manuscript. Manuscripts can be searched, compared, annotated, and exported for further use. Although it is web-based, it is also designed to be used locally and thus can be used both online for collaborative work or offline for individual work.
 
 # Requirements (Host) #
 * PHP 5.0 (recommended PHP 5.4 or greater)
@@ -13,9 +13,7 @@ Manuscriptus Pro is an open-source web-based application (written in PHP and usi
 # Installation #
 1. Ensure that a sufficient PHP and MySQL environment is available.
 2. Download and unzip the file to the location you would like it to be installed.
-3. Either rename the created directory to `manuscriptus-pro` or change `$manuscriptus_dir` (line 43 of `common.inc.php`) to the directory name you wish to use.
-4. Ensure that the database settings on lines 16-18 of `common.inc.php` are correct. It is not necessary to create any databases or tables, as the program will do that itself. Note that it will try to use any database named `manuscriptus`, so it is advisable to change the name of the existing database first. Because of this, it is not possible to have multiple installations of Manuscriptus Pro on the same host.
-5. Navigate to the Manuscriptus Pro directory in your browser (at this point it will make the rest of the necessary changes).
+3. Run setup.php.
 
 # Roadmap for Releases #
 
@@ -27,6 +25,7 @@ Manuscriptus Pro is an open-source web-based application (written in PHP and usi
 * Efficient editor, Markdown syntax, and footnotes for lines
 * Edit corpuses, manuscripts, and lines
 * Delete corpuses, manuscripts, and lines
+* Major overhaul of program architecture
 * **v0.4.1**
 	* View lines from all manuscripts in a corpus together
 * **v0.4.2**
@@ -35,9 +34,12 @@ Manuscriptus Pro is an open-source web-based application (written in PHP and usi
 ## v0.5 ##
 * Create and restore from backups
 
-## v0.6##
+## v0.5.5 ##
 * Pagination for lines
 * Search in manuscripts and corpuses 
+
+## v0.6 ##
+* Plugin system in place
 
 ## v0.7 ##
 * Compare and analyze manuscripts in a corpus
@@ -50,20 +52,15 @@ Manuscriptus Pro is an open-source web-based application (written in PHP and usi
 
 ## v1.0 ##
 * Full documentation available
-* Easily distributable
 * Setup instructions
 
-## v1.5 ##
-* Plugin system fully in place
-
-## v2.0 ##
+## v1.5 - v2.0 ##
 * Awesome new interface?
 * Cleaner, more intuitive architecture?
 * Cool new features?
 
 ## Plugins ##
-* Secure User Account System (available by v1.5)
+* Secure User Account System (available by v0.6)
 * Integrated manuscript images?
 * MUFI palette?
 * Polytonic Greek keyboard?
-* Font integration?
