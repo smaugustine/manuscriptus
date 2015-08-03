@@ -16,6 +16,11 @@ body {
 	background-color: #eee;
 	height: 40px;
 }
+.footer div, .footer div p{
+	height: 100%;
+	margin-bottom: 0;
+	line-height: 40px;
+}
 .page-header{
 	border-bottom-color: rgb(221, 221, 221);
 }
@@ -197,4 +202,12 @@ ul.nav-stacked>li>a{
 
 .help-content h2{
 	margin-top: 0;
+}
+
+span.mscodex{
+	color: #3bf;
+}
+
+a.navbar-brand:hover span.mscodex{
+	color: #9df;
 }

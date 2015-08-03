@@ -8,40 +8,36 @@
  * This is the only file (besides plugins) that is included
  * before output, so all header() redirects must occur here.
  */
- 
+
 /*
  * Database Settings
  */
 function db_connect(){
-	$username	= 'root'; 		//Username for MySQL database (e.g. 'root')
-	$password	= 'root';		//Username for MySQL database (e.g. 'root')
-	$host		= 'localhost';	//Host for MySQL database (if unknown, use 'localhost')
+	if(!file_exists('config.ini')) header("Location: ".'setup.php?error=config');
+	$db_settings = parse_ini_file("config.ini");
+	$username	 = $db_settings['username'];
+	$password	 = $db_settings['password'];
+	$host		 = $db_settings['host'];
+	$db_name     = $db_settings['db_name'];
+	define('MS_DIR', $db_settings['directory']);
 	
 	static $db_connect = false;
 	if($db_connect) die('db_connect can only be called once.');
 	else $db_connect = true;
 	
 	//Before establishing ezSQL connection, check if database info is correct
-	//and that manuscriptus database exists (and if not, create it)
-	$link = mysqli_connect($host, $username,$password);
-	if(!$link) die('Fatal error: could not connect to database. Check database information.');
-	mysqli_query($link, 'CREATE DATABASE IF NOT EXISTS manuscriptus');
-	$link = mysqli_connect($host, $username,$password, 'manuscriptus');
-	if(!$link) die('Fatal error: could not connect to database. Check database information.');
+	//and that manuscriptus database exists
+	$link = mysqli_connect($host, $username, $password, $db_name);
+	if(!$link) header("Location: ".'setup.php?error=db');
 	mysqli_close($link);
 	
 	//Establish ezSQL connection
 	global $db;
-	$db = new ezSQL_mysqli($username,$password,'manuscriptus',$host);
+	$db = new ezSQL_mysqli($username, $password, $db_name, $host);
 }
 
-define('MP_VERSION', 'v0.4.4');
+define('MC_VERSION', 'v0.4.5');
 header("Content-Type: text/html; charset=UTF-8");
-
-//THE_BASE_URL: used to ensure that Manuscriptus Pro
-//links work in subdirectories
-$manuscriptus_dir = 'manuscriptus-pro';
-define('THE_BASE_URL', strstr($_SERVER['REQUEST_URI'], $manuscriptus_dir, true)."$manuscriptus_dir/");
 
 //Session is mostly used for sending info (e.g. alerts) without using POST or GET.
 //Note that session is closed at the end of toolbar.php,
@@ -60,11 +56,13 @@ require_once('ez_sql_mysqli.php'); //ezSQL for MySQLi
 
 db_connect();
 $db->query("SET NAMES 'UTF8'");
-$db->query("CREATE TABLE IF NOT EXISTS corpuses (id varchar(30) PRIMARY KEY, name varchar(60) CHARACTER SET utf8 NOT NULL, description text CHARACTER SET utf8 NOT NULL)");
-$db->query("CREATE TABLE IF NOT EXISTS manuscripts (id varchar(30) PRIMARY KEY, corpus varchar(30), name varchar(60) CHARACTER SET utf8 NOT NULL, siglum varchar(4) CHARACTER SET utf8 NOT NULL, frange varchar(20) CHARACTER SET utf8 NOT NULL, date varchar(60) CHARACTER SET utf8 NOT NULL, link varchar(60) CHARACTER SET utf8 NOT NULL, description text CHARACTER SET utf8 NOT NULL, INDEX corpus (corpus ASC))");
 $db->hide_errors();
 $counts = $db->get_row("SELECT COUNT(*) AS corpus_count,(SELECT COUNT(*) FROM manuscripts) AS ms_count FROM corpuses");
-if(!$counts) if(!$link) die('Fatal error: could not connect to required tables. Check database information.');
+if(!$counts) if(!$link) header("Location: ".'setup.php?error=db');
+
+//THE_BASE_URL: used to ensure that MS:Codex
+//links work in subdirectories
+define('THE_BASE_URL', strstr($_SERVER['REQUEST_URI'], MS_DIR, true).MS_DIR.'/');
 
 /*
  * Setup .htaccess
@@ -77,7 +75,24 @@ if(!file_exists('.htaccess')){
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteCond %{REQUEST_FILENAME} !-d
 	RewriteRule ^ index.php [L]
-</IfModule>");
+</IfModule>
+
+<FilesMatch '\.php$'>
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+<FilesMatch 'index.php$'>
+    Order Allow,Deny
+    Allow from all
+</FilesMatch>
+<FilesMatch 'setup.php$'>
+    Order Allow,Deny
+    Allow from all
+</FilesMatch>
+<FilesMatch '(.+).file.php$'>
+    Order Allow,Deny
+    Allow from all
+</FilesMatch>");
 	fclose($f);
 }
 if(!file_exists('.htaccess')) die('The .htaccess file could not be created/edited.');
@@ -163,7 +178,8 @@ function nspace($namespace = false, $plugin_name = false){
 								'corpus'	=> 'main.page.php',
 								'manuscript'=> 'main.page.php',
 								'ms'		=> 'main.page.php',
-								'line'		=> 'main.page.php');
+								'line'		=> 'main.page.php',
+								'downloads' => 'main.page.php');
 	if($namespace && $plugin_name && array_key_exists($namespace, $namespaces)) die('A namespace cannot be registered more than once.');
 	elseif($namespace && $plugin_name) $namespaces[$namespace] = 'plugins/'.$plugin_name.'/'.$namespace.'.page.php';
 	elseif($namespace && array_key_exists($namespace, $namespaces)) return $namespaces[$namespace];
@@ -194,7 +210,7 @@ function argument($key){
 //Text is prepended to <title>
 //Until returned with page_title()
 function page_title($string = false){
-	static $page_title = 'Manuscriptus Pro';
+	static $page_title = 'Manuscriptus: Codex';
 	static $modified = false;
 	if($string && !$modified){ $page_title = $string.' | '.$page_title; $modified = true; }
 	elseif($string) $page_title = $string.$page_title;
@@ -275,9 +291,9 @@ require_once('functions/functions.inc.php');
 ###Help Menu###
 //The Help menu is always last
 nav_menu('Help', array(
-	//array('title' => 'Manuscriptus Pro FAQ', 'url' => 'faq/', 'condition' => 1),
-	array('title' => 'Manuscriptus Pro Help', 'url' => 'help/', 'condition' => 1),
-	array('title' => 'About Manuscriptus Pro', 'url' => 'about/', 'condition' => 1)
+	//array('title' => 'Manuscriptus: Codex FAQ', 'url' => 'faq/', 'condition' => 1),
+	array('title' => 'Manuscriptus: Codex Help', 'url' => 'help/', 'condition' => 1),
+	array('title' => 'About Manuscriptus: Codex', 'url' => 'about/', 'condition' => 1)
 ));
 
 ###If POST Header Still Full###
@@ -309,7 +325,7 @@ $ms_tables = $db->get_row("SELECT COUNT(*) AS table_count FROM information_schem
 
 if($counts->corpus_count < 1 && $counts->ms_count < 1 && strpos($_SERVER['PHP_SELF'],'new') !== false) $_SESSION['alerts'][] = array('info', "With this form you can create a new corpus. Simply enter a name for the corpus and a unique corpus identifier will be suggested. You can change the identifier if you wish, but it must be unique and can only contain lowercase alphanumeric characters and dashes. When you are finished simply click <b>Create Corpus</b>.");
 
-elseif($counts->corpus_count < 1 && $counts->ms_count < 1) $_SESSION['alerts'][] = array('info', "Welcome to Manuscriptus Pro. Everything seems to have been set up correctly. You can get started with your first corpus by going to <b>File</b> > <b>New Corpus...</b>");
+elseif($counts->corpus_count < 1 && $counts->ms_count < 1) $_SESSION['alerts'][] = array('info', "Welcome to Manuscriptus: Codex. Everything seems to have been set up correctly. You can get started with your first corpus by going to <b>File</b> > <b>New Corpus...</b>");
 
 elseif($counts->ms_count < 1 && strpos($_SERVER['PHP_SELF'],'new') !== false && $the_corpus) $_SESSION['alerts'][] = array('info', "With this form you can add a manuscript to the corpus you created previously. Simply enter in the details for the manuscript, then click <b>Create Manuscript</b>. As before, an identifier will be suggested, but you can change it. It must, however, be unique and only contain lowercase alphanumeric characters and dashes.");
 

@@ -40,15 +40,21 @@ if(argument('namespace') == 'edit' && $the_corpus && $the_ms && argument(2)){
 }
 
 /*
- * Active Breadcrumbs
+ * Active Breadcrumbs & Page Titles
  */
 
 if(argument('namespace') == 'new' && $the_corpus && $the_ms) {breadcrumbs('Add Line', 'new/'.$the_corpus->id.'/'.$the_ms->id.'/'); page_title('New Line « ');}
 elseif(argument('namespace') == 'new' && $the_corpus) {breadcrumbs('Create New Manuscript', 'new/'.$the_corpus->id.'/'); page_title('New Manuscript « ');}
 elseif(argument('namespace') == 'new') {breadcrumbs('Create New Corpus', 'new/'); page_title('New Corpus');}
+
 elseif(argument('namespace') == 'edit' && $the_corpus && $the_ms && $the_line) breadcrumbs('Edit Line '.$the_line->number, 'edit/'.$the_corpus->id.'/'.$the_ms->id.'/'.$the_line->number.'/');
 elseif(argument('namespace') == 'edit' && $the_corpus && $the_ms) breadcrumbs('Edit Manuscript', 'edit/'.$the_corpus->id.'/'.$the_ms->id.'/');
 elseif(argument('namespace') == 'edit' && $the_corpus) breadcrumbs('Edit Corpus', 'edit/'.$the_corpus->id.'/');
+
+elseif(argument('namespace') == 'backup' && argument(0) == 'create') page_title('Create Backup');
+elseif(argument('namespace') == 'backup' && argument(0) == 'restore') page_title('Restore from Backup');
+elseif(argument('namespace') == 'backup') header("Location: ".THE_BASE_URL);
+
 if(argument('namespace') == 'edit') page_title('Edit « ');
 
 /*
@@ -70,11 +76,10 @@ nav_menu('File', array(
 	array('title' => 'Export Corpus', 'url' => 'export/'.($the_corpus ? $the_corpus->id : '').'/', 'condition' => $the_corpus),
 	array('title' => 'Export Manuscript', 'url' => 'export/'.($the_corpus ? $the_corpus->id : '').'/'.($the_ms ? $the_ms->id : '').'/', 'condition' => $the_ms),
 	array('title' => 'Export Lines...', 'url' => 'export/'.($the_corpus ? $the_corpus->id : '').'/'.($the_ms ? $the_ms->id : '').'/lines/', 'condition' => $the_ms)
-));
-nav_menu('File', array(
-	array('title' => 'Create Backup', 'url' => 'backup/create/', 'condition' => 1),
-	array('title' => 'Restore from Backup', 'url' => 'backup/restore/', 'condition' => 1)
 ));*/
+nav_menu('File', array(
+	array('title' => 'Create Backup', 'url' => 'backup/create/', 'condition' => 1)
+));
 nav_menu('Edit', array(
 	array('title' => 'Edit Corpus...', 'url' => 'edit/'.($the_corpus ? $the_corpus->id : '').'/', 'condition' => $the_corpus),
 	array('title' => 'Edit Manuscript...', 'url' => 'edit/'.($the_corpus ? $the_corpus->id : '').'/'.($the_ms ? $the_ms->id : '').'/', 'condition' => $the_ms)
@@ -412,16 +417,16 @@ if(!empty($_POST)){
 		$lineNumber = $db->escape(strip_html($_POST['deleteLineNumber']));
 		$lineMS = $db->escape(strip_html($_POST['deleteLineMS']));
 		$lineCorpus = $db->escape(strip_html($_POST['deleteLineCorpus']));
-	}
-	$query = $db->query("DELETE FROM ".dash2us($lineMS)." WHERE number = '$lineNumber'");
-	if(!$query){
-		$_SESSION['alerts'][] = array('danger', 'The line could not be deleted due to a database error. For more information, please consult the help documentation.');
-		header("Location: ".THE_BASE_URL);
-		exit();
-	}
-	else{
-		$_SESSION['alerts'][] = array('success', 'The line was deleted successfully.');
-		header("Location: ".THE_BASE_URL."view/$lineCorpus/$lineMS/");
-		exit();
+		$query = $db->query("DELETE FROM ".dash2us($lineMS)." WHERE number = '$lineNumber'");
+		if(!$query){
+			$_SESSION['alerts'][] = array('danger', 'The line could not be deleted due to a database error. For more information, please consult the help documentation.');
+			header("Location: ".THE_BASE_URL);
+			exit();
+		}
+		else{
+			$_SESSION['alerts'][] = array('success', 'The line was deleted successfully.');
+			header("Location: ".THE_BASE_URL."view/$lineCorpus/$lineMS/");
+			exit();
+		}
 	}
 }

@@ -29,7 +29,7 @@ require_once('common.inc.php'); //Required before any output
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-			<a class="navbar-brand" href="<?=THE_BASE_URL?>">Manuscriptus Pro</a>
+			<a class="navbar-brand" href="<?=THE_BASE_URL?>">Manuscriptus: Codex</a>
 			</div>
 		
 			<div class="collapse navbar-collapse" id="toolbar">
@@ -66,8 +66,18 @@ require_once('common.inc.php'); //Required before any output
 </div>
 <footer class="footer">
 	<div class="container row col-sm-offset-1 col-sm-10">
-		<p class="text-muted text-center"><small>Powered by <a href="about/"><b>Manuscriptus Pro <?=MP_VERSION?></b></a>. This project has <b><?=plural($counts->ms_count, 'manuscript', '-s', true)?></b> in <b><?=plural($counts->corpus_count, 'corpus', '-es', true)?></b>.</small></p>
+		<p class="text-muted text-center"><small>Powered by <b><a href="about/">Manuscriptus: Codex</a> <?=MC_VERSION?></b>. This project has <b><?=plural($counts->ms_count, 'manuscript', '-s', true)?></b> in <b><?=plural($counts->corpus_count, 'corpus', '-es', true)?></b>.</small></p>
 	</div>
 </footer>
+<script>
+	$(document).ready(function(){
+		$("p,li,h1,a:contains('Manuscriptus: Codex')").html(function(_, html) {
+			return html.replace(/(Codex)/g, '<span class="mscodex">$1</span>');
+		});
+		$("p a:contains('Manuscriptus: Codex')").html(function(_, html) {
+			return html.replace(/(Manuscriptus: )/g, '<span style="color: #333;">$1</span>');
+		});
+	});
+</script>
 </body>
 </html>
