@@ -68,7 +68,24 @@ elseif(argument(0) == 'restore'):
 ?>
 <ul class="breadcrumb">
 	<li><a href="<?=THE_BASE_URL?>">Manuscriptus: Codex</a></li>
-	<li class="active">Create Backup</li>
+	<li class="active">Restore from Backup</li>
 </ul>
 <h1 class="page-header" style="text-align: left;">Restore from Backup</h1>
+
+<p class="lead">This page allows you to restore a database using an SQL backup. <b>WARNING: The queries contained in the backup file are directly executed on the database. Ensure that there are no errors or malicious queries in the backup file.</b></p>
+
+
+<form id="uploadBackupFile" class="form" method="post" action="<?=THE_BASE_URL?>" enctype="multipart/form-data" style="text-align: center;">
+	<div class="form-group row">
+		<div class="col-sm-12">
+			<input name="backupFile" id="backupFile" type="file" style="display: inline-block;">
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="col-sm-offset-4 col-sm-4">
+			<button type="submit" name="submitBackup" class="btn btn-primary">Submit</button>
+			<button type="reset" class="btn btn-warning">Reset</button>
+		</div>
+	</div>
+</form>
 <?php endif; ?>

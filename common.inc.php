@@ -36,7 +36,7 @@ function db_connect(){
 	$db = new ezSQL_mysqli($username, $password, $db_name, $host);
 }
 
-define('MC_VERSION', 'v0.4.5');
+define('MC_VERSION', 'v0.5');
 header("Content-Type: text/html; charset=UTF-8");
 
 //Session is mostly used for sending info (e.g. alerts) without using POST or GET.
@@ -62,7 +62,8 @@ if(!$counts) if(!$link) header("Location: ".'setup.php?error=db');
 
 //THE_BASE_URL: used to ensure that MS:Codex
 //links work in subdirectories
-define('THE_BASE_URL', strstr($_SERVER['REQUEST_URI'], MS_DIR, true).MS_DIR.'/');
+if(strpos($_SERVER['REQUEST_URI'], MS_DIR) === false) header("Location: ".'setup.php?error=dir');
+else define('THE_BASE_URL', strstr($_SERVER['REQUEST_URI'], MS_DIR, true).MS_DIR.'/');
 
 /*
  * Setup .htaccess
@@ -167,13 +168,14 @@ function nspace($namespace = false, $plugin_name = false){
 	static $namespaces = array(	'view'		=> 'main.page.php',
 								'new'		=> 'functions/new.page.php',
 								'edit'		=> 'functions/edit.page.php',
-								'compare'	=> 'functions/compare.page.php',
 								'import'	=> 'functions/import.page.php',
 								'export'	=> 'functions/export.page.php',
 								'backup'	=> 'functions/backup.page.php',
 								'help'		=> 'docs/main.page.php',
 								'faq'		=> 'docs/faq.page.php',
 								'about'		=> 'docs/about.page.php',
+								'analyze'	=> 'tools/analyze.page.php',
+								'search'	=> 'tools/search.page.php',
 								'main'		=> 'main.page.php',
 								'corpus'	=> 'main.page.php',
 								'manuscript'=> 'main.page.php',
@@ -282,6 +284,7 @@ $the_line = false;
  */
 require_once('main.inc.php');
 require_once('functions/functions.inc.php');
+require_once('tools/tools.inc.php');
 
 /*
  * Require Plugin Include Files

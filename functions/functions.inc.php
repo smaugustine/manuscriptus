@@ -67,18 +67,19 @@ nav_menu('File', array(
 	array('title' => 'New Manuscript...', 'url' => 'new/'.($the_corpus ? $the_corpus->id : '').'/', 'condition' => $the_corpus),
 	array('title' => 'New Line...', 'url' => 'new/'.($the_corpus ? $the_corpus->id : '').'/'.($the_ms ? $the_ms->id : '').'/', 'condition' => $the_ms)
 ));
-/*nav_menu('File', array(
-	array('title' => 'Import Corpus...', 'url' => 'import/', 'condition' => 1),
-	array('title' => 'Import Manuscript...', 'url' => 'import/'.($the_corpus ? $the_corpus->id : '').'/', 'condition' => $the_corpus),
-	array('title' => 'Import Lines...', 'url' => 'import/'.($the_corpus ? $the_corpus->id : '').'/'.($the_ms ? $the_ms->id : '').'/', 'condition' => $the_ms)
+nav_menu('File', array(
+	//array('title' => 'Import Corpus...', 'url' => 'import/', 'condition' => 1),
+	//array('title' => 'Import Manuscript...', 'url' => 'import/'.($the_corpus ? $the_corpus->id : '').'/', 'condition' => $the_corpus),
+	//array('title' => 'Import Lines...', 'url' => 'import/'.($the_corpus ? $the_corpus->id : '').'/'.($the_ms ? $the_ms->id : '').'/', 'condition' => $the_ms)
 ));
 nav_menu('File', array(
-	array('title' => 'Export Corpus', 'url' => 'export/'.($the_corpus ? $the_corpus->id : '').'/', 'condition' => $the_corpus),
-	array('title' => 'Export Manuscript', 'url' => 'export/'.($the_corpus ? $the_corpus->id : '').'/'.($the_ms ? $the_ms->id : '').'/', 'condition' => $the_ms),
-	array('title' => 'Export Lines...', 'url' => 'export/'.($the_corpus ? $the_corpus->id : '').'/'.($the_ms ? $the_ms->id : '').'/lines/', 'condition' => $the_ms)
-));*/
+	//array('title' => 'Export Corpus', 'url' => 'export/'.($the_corpus ? $the_corpus->id : '').'/', 'condition' => $the_corpus),
+	//array('title' => 'Export Manuscript', 'url' => 'export/'.($the_corpus ? $the_corpus->id : '').'/'.($the_ms ? $the_ms->id : '').'/', 'condition' => $the_ms),
+	//array('title' => 'Export Lines...', 'url' => 'export/'.($the_corpus ? $the_corpus->id : '').'/'.($the_ms ? $the_ms->id : '').'/lines/', 'condition' => $the_ms)
+));
 nav_menu('File', array(
-	array('title' => 'Create Backup', 'url' => 'backup/create/', 'condition' => 1)
+	array('title' => 'Create Backup', 'url' => 'backup/create/', 'condition' => 1),
+	array('title' => 'Restore from Backup', 'url' => 'backup/restore/', 'condition' => 1)
 ));
 nav_menu('Edit', array(
 	array('title' => 'Edit Corpus...', 'url' => 'edit/'.($the_corpus ? $the_corpus->id : '').'/', 'condition' => $the_corpus),
@@ -428,5 +429,32 @@ if(!empty($_POST)){
 			header("Location: ".THE_BASE_URL."view/$lineCorpus/$lineMS/");
 			exit();
 		}
+	}
+	//Restore from backup
+	elseif(isset($_POST['submitBackup'])){
+		$restore_commands = file_get_contents($_FILES['backupFile']['tmp_name'], "r");
+		$restore_commands = explode(';', $restore_commands);
+		$error_count = 0;
+		$operations = 0;
+		$bad_queries = 0;
+		foreach($restore_commands as $command){
+			$command = trim($command);
+			//Only allow CREATE TABLE and INSERT INTO queries; other queries are clearly malicious
+			if(!empty($command) && stripos($command, 'CREATE TABLE IF NOT EXISTS') === false && stripos($command, 'INSERT INTO') === false) $bad_queries++;
+			//Double check that no malicious commands have secretly made their way into the query
+			elseif(!empty($command) && (stripos($command, 'DROP TABLE') !== false || stripos($command, 'DELETE TABLE') !== false || stripos($command, 'UPDATE') !== false || stripos($command, 'TRUNCATE') !== false)) $bad_queries++;
+			//If not empty line (caused by trailing whitespace, etc.) or malicious then execute query
+			elseif(!empty($command)){ $query = $db->query("$command;"); $operations++; }
+			//If empty line, ignore and do not bother giving an error
+			else $query = true;
+			if(strpos($command, 'CREATE TABLE IF NOT EXISTS') !== false) $query = true; //Since CREATE TABLE returns 0 rows, simply give true value (although CREATE TABLE may have failed...)
+			if(!$query) $error_count++;
+		}
+		if($bad_queries) $_SESSION['alerts'][] = array('danger', "<b>$bad_queries potentially malicious " . plural($bad_queries, 'query', 'queries') . "</b> discovered and ignored.");
+		if($operations == 0) $_SESSION['alerts'][] = array('warning', "No operations were completed in the restoration.");
+		elseif(!$error_count) $_SESSION['alerts'][] = array('success', "The restoration has been completed with <b>" . plural($operations, 'query', 'queries', true) . "</b> and no errors.");
+		else $_SESSION['alerts'][] = array('warning', "The restoration has been completed with <b>" . plural($operations, 'query', 'queries', true) . "</b> and <b>" . plural($error_count, 'error', '-s', true) . "</b>.");
+		header("Location: ".THE_BASE_URL);
+		exit();
 	}
 }
