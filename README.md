@@ -1,3 +1,5 @@
+     Manuscriptus: Codex is no longer being developed. See https://gothicusapp.com.
+
 # Manuscriptus: Codex #
 Manuscriptus: Codex is an open-source web-based application (written in PHP and using MySQL) designed to facilitate and organize the preparation of manuscript corpuses and critical editions. One can create corpuses, add manuscripts to a corpus, and add lines to a manuscript. Manuscripts can be searched, compared, annotated, and exported for further use. Although it is web-based, it is also designed to be used locally and thus can be used both online for collaborative work or offline for individual work.
 
